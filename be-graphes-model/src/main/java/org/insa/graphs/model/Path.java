@@ -1,5 +1,6 @@
 package org.insa.graphs.model;
 
+import java.lang.classfile.components.ClassPrinter.Node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -36,9 +37,25 @@ public class Path {
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
+        if (nodes.isEmpty()) {
+            return new Path(graph); //si il ny a pas de noeuds on 
+        }
+        if (nodes.size() == 1) {
+            return new Path(graph, nodes.get(0));
+        }
+    
+        List<Arc> arcs = new ArrayList<>();
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            Node node1 = nodes.get(i);
+            Node node2 = nodes.get(i + 1);
+    
+            Arc fastestArc = null;
+            for (Arc arc : node1.getSuccessors()) {
+                if (arc.getDestination().equals(node2) && (fastestArc == null || arc.getMinimumTravelTime() < fastestArc.getMinimumTravelTime())) {
+                    fastestArc = arc;
+                }
         return new Path(graph, arcs);
     }
-
     /**
      * Create a new path that goes through the given list of nodes (in order),
      * choosing the shortest route if multiple are available.
@@ -57,6 +74,31 @@ public class Path {
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
+        //on va itérer sur chaque paire(boucle interieure) consécutifs 
+        //de noeuds dans la liste (boucle exterieure)
+        for (int i = 0; i < nodes.size() ; i++) {
+            //node1 et node2 deux noeuds consécutifs 
+            Node node1 = nodes.get(i); 
+            Node node2 = nodes.get(i + 1);
+        //on initialise l'arc le  plus rapide à 0 avant de rentrer 
+        //dans la boucle pour lui ajouter les arcs au fur et à mesure
+            Arc ShortestArc = null;
+            //dans la boucle, à chaque fois, on prend un noeud et le noeud qui le succède
+            // b.la fonction getDestination(); pour accéder au nœud destinataire de l’arc
+            //l'arc est le plus rapide, quand le noeud sucesseur est celui le noeud le plus proche, c'est àdire
+            //noeud i+1 = noeud destinataite et final 
+            for (Arc arc : node1.getSuccessors()) {
+                if (arc.getDestination().equals(node2) && (fastestArc == null || arc.getMinimumTravelTime() < fastestArc.getMinimumTravelTime())) {
+                    shortestArc = arc;
+                }
+            }
+    
+            if (fastestArc == null) {
+                throw new IllegalArgumentException("Les nœuds " + node1 + " et " + node2 + " ne sont pas connectés par un chemin direct.");
+            }
+    
+            arcs.add(fastestArc);
+        } 
         return new Path(graph, arcs);
     }
 
@@ -200,8 +242,16 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /*on vérifie si le chemin est valide, c'est à dire; il doit être non vide, contient au moins un noeud
+     * ou tout simplement chaque noeud d'origine est connecté au noeud destinataire
+     * on a deja les fonctions getOrigin(), arcs.size(), isEmpty(), getDestination()
+     */
     public boolean isValid() {
         // TODO:
+        if (this.isEmpty() || this.arcs.isEmpty() || (this.arcs.size() == 1 && this.getOrigin() != null)) {
+            return true;
+        }
+    
         return false;
     }
 
@@ -212,9 +262,17 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /*calcule la longueur totale du chemin 
+    en sommant les longueurs de tous les arcs; on utilise une boucle for qui va parcourir tous les arcs du graphe */
+
     public float getLength() {
         // TODO:
-        return 0;
+        /*on commence par initialiser la longueur à 0 pour lui ajouter après les arcs  */
+        float Total = 0;
+        for (Arc arc : this.arcs) {
+            Total += arc.getLength();
+        }
+        return Total;
     }
 
     /**
@@ -227,9 +285,19 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /*gettraveltime on l'a utilisé pour unn seul arc, maintenat on va faire sa somme sur pls arcs */
+     /*on va caluler la durée du trjat à une vitesse speed */
     public double getTravelTime(double speed) {
+        /*la vitesse est donnée = speed */
         // TODO:
-        return 0;
+        //on initialise la durée de notre trajet à 0 
+        // après à chaque arcs parcouru, on ajoute sa durée 
+        double Time = 0;
+        /*maintenat on va parcourir tous les arcs */
+        for (Arc arc: this.arcs){
+            Time= Time+arc.getTravelTime(speed);
+        }
+        return  Time;
     }
 
     /**
@@ -240,9 +308,14 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /* on va calculer la durée de trajet la plus courte */
     public double getMinimumTravelTime() {
+        double Minimum=0;
         // TODO:
-        return 0;
+        for (Arc arc : this.arcs)  {
+            Minimum +=arc.getMinimumTravelTime();
+        }    
+        return Minimum;
     }
 
 }
