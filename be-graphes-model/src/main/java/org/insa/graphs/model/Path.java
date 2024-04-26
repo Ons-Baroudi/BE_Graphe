@@ -1,5 +1,6 @@
 package org.insa.graphs.model;
 
+import java.lang.classfile.components.ClassPrinter.Node;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,10 +74,26 @@ public class Path {
                         // Ajoute l'arc le plus court à la liste des arcs
                         arcs.add(arc_court);
                     }
+        if (nodes.isEmpty()) {
+            return new Path(graph); //si il ny a pas de noeuds on 
+        }
+        if (nodes.size() == 1) {
+            return new Path(graph, nodes.get(0));
+        }
+    
+        List<Arc> arcs = new ArrayList<>();
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            Node node1 = nodes.get(i);
+            Node node2 = nodes.get(i + 1);
+    
+            Arc fastestArc = null;
+            for (Arc arc : node1.getSuccessors()) {
+                if (arc.getDestination().equals(node2) && (fastestArc == null || arc.getMinimumTravelTime() < fastestArc.getMinimumTravelTime())) {
+                    fastestArc = arc;
+                }
                     return new Path(graph, arcs);
                 }
     }
-
     /**
      * Create a new path that goes through the given list of nodes (in order),
      * choosing the shortest route if multiple are available.
@@ -263,6 +280,10 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /*on vérifie si le chemin est valide, c'est à dire; il doit être non vide, contient au moins un noeud
+     * ou tout simplement chaque noeud d'origine est connecté au noeud destinataire
+     * on a deja les fonctions getOrigin(), arcs.size(), isEmpty(), getDestination()
+     */
     public boolean isValid() {
         // done
         if (this.isEmpty()){ //pour tester si le chemin est vide 
@@ -291,6 +312,9 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /*calcule la longueur totale du chemin 
+    en sommant les longueurs de tous les arcs; on utilise une boucle for qui va parcourir tous les arcs du graphe */
+
     public float getLength() {
         // done:
         float longeurtotale=0.0f;
@@ -310,6 +334,8 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /*gettraveltime on l'a utilisé pour unn seul arc, maintenat on va faire sa somme sur pls arcs */
+     /*on va caluler la durée du trjat à une vitesse speed */
     public double getTravelTime(double speed) {
         // done:
         double temps =0.0;
@@ -327,6 +353,7 @@ public class Path {
      * 
      * @deprecated Need to be implemented.
      */
+    /* on va calculer la durée de trajet la plus courte */
     public double getMinimumTravelTime() {
         // Done:
         double temps =0; 
