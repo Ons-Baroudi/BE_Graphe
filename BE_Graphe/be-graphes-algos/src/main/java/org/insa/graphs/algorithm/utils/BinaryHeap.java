@@ -236,31 +236,5 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public String toString() {
         return BinaryHeapFormatter.toStringTree(this, 8);
     }
-    //je crée une fonction qui renvoie si le tas est valide ou non 
-    public boolean isValid() {
-        boolean tas_valide = false ; 
-    
-        if (this.isEmpty()) {
-            tas_valide = true ; 
-        } 
-        else {
-            tas_valide = true ; 
-            int i=0;
-            while (tas_valide == true && i<=this.currentSize) {
-                //on analyse l'index des fils de chaque noeud
-                //on voit s'ils suivent la règle
-                //fils gauche:
-                if (indexLeft(i)<this.currentSize && indexLeft(i)<i) {
-                    tas_valide=false;
-                }
-                //fils droit:
-                if ((indexLeft(i)+1)<this.currentSize && (indexLeft(i)+1)<i) {
-                    tas_valide=false;
-                }
-                i++;
-            }
-        }
-        return tas_valide ; 
-    }
 
 }

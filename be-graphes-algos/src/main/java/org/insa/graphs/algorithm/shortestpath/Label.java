@@ -1,72 +1,56 @@
 package org.insa.graphs.algorithm.shortestpath;
 
-import org.insa.graphs.model.Node;
-
 public class Label implements Comparable<Label> {
-    protected float cost;
-    private boolean marked; //sert au marquage du noeud 
-    private boolean DansTas; //pour savoir si le noeud est dans le tas ;
-    private Node pere; 
-    private Node noeud;
-    
+    private int sommet;
+    private int pere;
+    private boolean marque;
+    private double coutRealise;
 
-    public Label(Node noeud){
-        this.noeud=noeud;
-        this.marked =false;
-        this.cost=Float.POSITIVE_INFINITY;
-        this.pere=null;
-        this.DansTas=false;
+    public Label(int sommet, int pere, boolean marque, double coutRealise)
+    {
+        this.sommet=sommet;
+        this.pere=pere;
+        this.marque=marque;
+        this.coutRealise=coutRealise;
     }
-    public Node getNode (){
-        return this.noeud;
+
+    public int compareTo(Label l)
+    {
+        return Double.compare(this.getTotalCost(), l.getTotalCost());
     }
-    public Node getpere(){
+
+    public int getSommet()
+    {
+        return this.sommet;
+    }
+    public int getPere()
+    {
         return this.pere;
     }
-
-    public float getCost(){
-        return this.cost;
+    public void setPere(int pere)
+    {
+        this.pere=pere;
     }
-
-    public float gettotalCost(){
-        return this.cost;
+    public boolean getMarque()
+    {
+        return this.marque;
     }
-    
-    public boolean getmarked(){
-        return this.marked;
+    public  double getRealCost()
+    {
+        return coutRealise;
     }
-
-    public boolean getDansTas(){
-        return this.DansTas;
+    public  double getTotalCost()
+    {
+        return coutRealise;
     }
-    public void initMarkage(){
-        this.marked=true;
+    public void setCost(double coutRealise)
+    {
+        this.coutRealise=coutRealise;
     }
-    public void initcost(float cout){
-        this.cost=cout;
+    public void setMarque(boolean marque)
+    {
+        this.marque=marque;
     }
-    public void initpere(Node papa){
-        this.pere=papa;
-    }
-    public void initDansTas(){
-        this.DansTas=true;
-    }
-
-
-    @Override
-    public int compareTo(Label other) {
-        // Done
-        int result ;
-        if (this.gettotalCost()<other.gettotalCost()){
-            result=-1;
-        }
-        else if (this.gettotalCost()==other.gettotalCost()){
-            result=0;
-        }
-        else {
-            result =1;
-        }
-        return result;
-    }
-    
 }
+
+
