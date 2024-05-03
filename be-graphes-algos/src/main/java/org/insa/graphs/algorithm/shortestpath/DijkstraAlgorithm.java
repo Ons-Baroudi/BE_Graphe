@@ -6,6 +6,7 @@ import java.util.Collections;
 
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
+import org.insa.graphs.algorithm.utils.ElementNotFoundException;
 import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
@@ -18,6 +19,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     Graph graph;/* graph sur lequel l'algorithme sera executé */
     BinaryHeap<Label> heap; /* binary heap permettant le tri des labels dans l'ordre croissant des couts de label */
+                            //nous aide à trouver the shortest path 
     HashMap<Integer, Label> LabelMap; /* hashmap permettant d'associer l'id du noeud a son label */
 
     public DijkstraAlgorithm(ShortestPathData data) {
@@ -34,11 +36,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         /*initialisation en insérant l'origin dans la hashmap et dans le heap */
         int origin = data.getOrigin().getId();
         Label labelOrigin = initLabel(origin,-1,false, 0);
-        LabelMap.put(origin, labelOrigin);
-        heap.insert(labelOrigin);
-        notifyOriginProcessed(graph.get(origin));
+        LabelMap.put(origin, labelOrigin);   
+        heap.insert(labelOrigin);   
+        notifyOriginProcessed(graph.get(origin));  
 
-        /* boucle permettant djikstra de s'éxecuter les deux conditions d'arrêt sont que le tas ne soit pas vide et que la destination ne soit pas marqué */
+        /* boucle permettant djikstra de s'éxecuter les deux conditions d'arrêt sont le tas est vide et tous les noeud sont marqués  */
         while(heap.size()!=0)
         {
             /* on vérifie si le label destination est dans la hashmap pour par la suite vérifier si il est marquer, si il l'est on arrête l'algo */
@@ -50,15 +52,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 }
             }
             
-            Label selectedNode = heap.findMin();/* sélection du sommet à marqué (le plus petit du tas) */
+            Label selectedNode = heap.findMin();/* séléction du sommet à marqué le cout min ou le premier du tas  */
+            System.out.println("le côut du label courant1 "+selectedNode.getRealCost());
+            System.out.println("le côut du label courant1 "+selectedNode .getTotalCost());
             heap.deleteMin();
             selectedNode.setMarque(true);
-            notifyNodeMarked(graph.get(selectedNode.getSommet()));
+            notifyNodeMarked(graph.get(selectedNode.getorigine()));
 
             /*on parcourt tout les arcs sortants du sommet que l'on vient de sélectionner */
-            for(Arc successor : graph.get(selectedNode.getSommet()).getSuccessors())
+            for(Arc successor : graph.get(selectedNode.getorigine()).getSuccessors())
             {
-                /* on vérifie si l'arc est autorisé, par exemple si on est en mode roads only, les trottoirs ne sont pas autoriés */
+                //on vérifie si l'arc est accssessible par voiture ou non ? 
                 if(data.isAllowed(successor))
                 {      
                     Node succesorNode = successor.getDestination();
@@ -75,28 +79,32 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                         successorLabel=LabelMap.get(succesorNode.getId());
                     }
                 
-                    /*on vérifie que le noeud voisin n'est pas marqué car si il l'est nous n'avons pas besoin de le traiter */
+                    /*si le noeud est déja marqué on passe on traite pas (spécifité de l'algorithme Dijkstra) */
                     if(!successorLabel.getMarque())
-                    {
-                        /*on calcul le nouveau cout pour atteindre le sommet voisin */
+                    {/*on additionne le cout présent avec le cout du noeud séléctionné */
                         double tempCost = data.getCost(successor)+selectedNode.getRealCost();
 
                         /* on vérifie si il améliore ou non le cout actuel du noeud */
                         if(tempCost<successorLabel.getRealCost())
                         {
-                            /* condition pour vérifier que le label est dans le tas */
                             if(successorLabel.getRealCost()!=Double.POSITIVE_INFINITY)
-                            {
-                                heap.remove(successorLabel);
+                            {// on efface le sommet du tas 
+
+                                try{heap.remove(successorLabel);
+                                }catch(ElementNotFoundException element){}
+                            System.out.println("le côut du label courant "+successorLabel.getRealCost());
+                            System.out.println("le côut du label courant "+successorLabel.getTotalCost());
                             }
                             else
+                            
                             {
                                 notifyNodeReached(succesorNode);
                             }
-                            /* on met à jour avec le nouveaux cout et nouveau père */
+                            /* on met à jour avec le nouveau cout et nouveau père */
                             successorLabel.setCost(tempCost);
-                            successorLabel.setPere(selectedNode.getSommet());
+                            successorLabel.setPere(selectedNode.getorigine());
 
+                            
                             heap.insert(successorLabel);
                         }
                     }
@@ -111,7 +119,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         return new Label(nodeId, fatherNode, marque, coutRealise);
     } 
 
-    /* fonction permettant de récupérer le path à partir de la hashmap final */
+    /* fonction permettant de récupérer le path à partir du Map obtenu  */
     public ShortestPathSolution getPathFromSPA(Graph graph,HashMap<Integer, Label> LabelMap, ShortestPathData data )
     {
         ShortestPathSolution solution = null;
@@ -119,39 +127,35 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         ArrayList<Arc> path_arc = new ArrayList<Arc>(); 
         int currentNode=data.getDestination().getId();
 
-        /* on vérifie que la destination est dans la hashmap, si elle l'est pas cela signifie que le chemin est infaisable */
+        /* on teste si la destination est dans la Map, si se trouve pas donc le chemin est inaccessible */
         if(!LabelMap.containsKey(currentNode))
         {
             return new ShortestPathSolution(data,Status.INFEASIBLE);
         }
         else
         {
-            /* boucle tant que le père courant à un père */
             while(true)
             {
                 Label currentLabel=LabelMap.get(currentNode);
-                int dadNode = currentLabel.getPere();
-                if(dadNode==-1)
+                int Node_marked = currentLabel.getPere();
+                if(Node_marked==-1)
                 {
                     break;
                 }
-                Label dadLabel = LabelMap.get(dadNode);
+                Label dadLabel = LabelMap.get(Node_marked);
 
-                /* on parcourt tout les arcs du père afin de recuperer l'arc qu'on utilise pour le path */
-                for(Arc arc : graph.get(dadNode).getSuccessors())
+                for(Arc arc : graph.get(Node_marked).getSuccessors())
                 {
-                    /* on vérifie que le père, le fils, cout de l'arc est le bon */
-                    if(arc.getDestination().getId()==currentNode && arc.getOrigin().getId()==dadNode && Math.abs(data.getCost(arc)-(currentLabel.getRealCost()-dadLabel.getRealCost())) <= 0.01)
+                    if(arc.getDestination().getId()==currentNode && arc.getOrigin().getId()==Node_marked && Math.abs(data.getCost(arc)-(currentLabel.getRealCost()-dadLabel.getRealCost())) <= 0.01)
                     {
                         path_arc.add(arc);
                         break;
                     }
                 }
-                /* on met le currentnode a dadnode afin de remonter les pères*/
-                currentNode=dadNode;
+                currentNode=Node_marked;
             }
 
-            /* si la taille de la liste est 0 cela signifie que l'origin et la destination est le même noeud */
+            //si le size==0  le noeud d'origine est bien le seul chemin  
             if(path_arc.size()==0)
             {
                 return new ShortestPathSolution(data,Status.INFEASIBLE);

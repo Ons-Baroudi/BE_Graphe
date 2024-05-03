@@ -1,27 +1,22 @@
 package org.insa.graphs.algorithm.shortestpath;
 
 public class Label implements Comparable<Label> {
-    private int sommet;
+    private int origine;
     private int pere;
-    private boolean marque;
-    private double coutRealise;
+    private boolean marked;
+    private double coutmade;
 
-    public Label(int sommet, int pere, boolean marque, double coutRealise)
+    public Label(int origine, int pere, boolean marked, double coutmade)
     {
-        this.sommet=sommet;
+        this.origine=origine;
         this.pere=pere;
-        this.marque=marque;
-        this.coutRealise=coutRealise;
+        this.marked=marked;
+        this.coutmade=coutmade;
     }
 
-    public int compareTo(Label l)
+    public int getorigine()
     {
-        return Double.compare(this.getTotalCost(), l.getTotalCost());
-    }
-
-    public int getSommet()
-    {
-        return this.sommet;
+        return this.origine;
     }
     public int getPere()
     {
@@ -33,23 +28,28 @@ public class Label implements Comparable<Label> {
     }
     public boolean getMarque()
     {
-        return this.marque;
+        return this.marked;
     }
     public  double getRealCost()
     {
-        return coutRealise;
+        return coutmade;
     }
     public  double getTotalCost()
     {
-        return coutRealise;
+        return coutmade;
     }
-    public void setCost(double coutRealise)
+    public void setCost(double coutmade)
     {
-        this.coutRealise=coutRealise;
+        this.coutmade=coutmade;
     }
-    public void setMarque(boolean marque)
+    public void setMarque(boolean marked)
     {
-        this.marque=marque;
+        this.marked=marked;
+    }
+    
+    public int compareTo(Label l)
+    {
+        return Double.compare(this.getTotalCost(), l.getTotalCost());
     }
 }
 
