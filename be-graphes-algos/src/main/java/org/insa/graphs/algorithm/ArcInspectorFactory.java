@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.insa.graphs.algorithm.AbstractInputData.Mode;
 import org.insa.graphs.model.Arc;
-//import org.insa.graphs.model.GraphStatistics;
+import org.insa.graphs.model.GraphStatistics;
 import org.insa.graphs.model.AccessRestrictions.AccessMode;
 import org.insa.graphs.model.AccessRestrictions.AccessRestriction;
 
@@ -25,12 +25,12 @@ public class ArcInspectorFactory {
             return arc.getLength();
         }
 
-        /*
+        
         @Override
         public int getMaximumSpeed() {
             return GraphStatistics.NO_MAXIMUM_SPEED;
         }
-        */
+        
 
         @Override
         public Mode getMode() {
@@ -58,12 +58,12 @@ public class ArcInspectorFactory {
             return arc.getLength();
         }
 
-        /*
+        
         @Override
         public int getMaximumSpeed() {
             return GraphStatistics.NO_MAXIMUM_SPEED;
         }
-        */
+        
 
         @Override
         public Mode getMode() {
@@ -89,12 +89,11 @@ public class ArcInspectorFactory {
             return arc.getMinimumTravelTime() ;
         }
 
-        /*
         @Override
         public int getMaximumSpeed() {
             return GraphStatistics.NO_MAXIMUM_SPEED;
         }
-        */
+        
 
         @Override
         public Mode getMode() {
@@ -130,12 +129,12 @@ public class ArcInspectorFactory {
             return "Fastest path for pedestrian";
         }
 
-        /*
+        
         @Override
         public int getMaximumSpeed() {
             return 5;
         }
-        */
+        
         
         @Override
         public Mode getMode() {

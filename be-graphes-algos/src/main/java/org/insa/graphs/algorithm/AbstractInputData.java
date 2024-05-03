@@ -79,11 +79,10 @@ public abstract class AbstractInputData {
      */
     
     /* Apparently, getMaximumSpeed is never initialized in arcInspectors.
-     * => Do not use.
+     * => Do not use.*/
     public int getMaximumSpeed() {
         return this.arcInspector.getMaximumSpeed();
     }
-    */
     
     /**
      * Check if the given arc is allowed for the filter corresponding to this input.
