@@ -11,13 +11,13 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
     public Label initLabel(int nodeId,int pere ,boolean marked,double coutRealise){
         ShortestPathData data =getInputData();
         Node succesorNode=graph.get(nodeId);
-        double droite;
+        double heuristique;
         if (data.getMode()==Mode.LENGTH){
-            droite=Point.distance(succesorNode.getPoint(),data.getDestination().getPoint());//droite = diffèrence entre le point de départ et le point de destination 
+            heuristique=Point.distance(succesorNode.getPoint(),data.getDestination().getPoint());//heuristique = diffèrence entre le point de départ et le point de destination 
         }else {
-            droite= succesorNode.getPoint().distanceTo(data.getDestination().getPoint())/data.getMaximumSpeed();
+            heuristique= succesorNode.getPoint().distanceTo(data.getDestination().getPoint())/data.getMaximumSpeed();
         }
-        return new LabelStar(nodeId, pere, marked, coutRealise, droite);
+        return new LabelStar(nodeId, pere, marked, coutRealise, heuristique);
         
     }
 
