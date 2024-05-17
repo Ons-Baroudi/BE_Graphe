@@ -139,11 +139,11 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     public void remove(E x) throws ElementNotFoundException {
         // Done:
         // declaration des variables pour les indices et le dernier élements 
-        int index;
+        int index; //l'element courant 
         int indexLast;
         E dernierElement; 
         // exception si liste est vide 
-        if (this.isEmpty()){
+        if (this.isEmpty()){ //pas d'élément à supprimer 
             throw new ElementNotFoundException(x);
         } 
         else{
@@ -169,7 +169,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
                     currentSize--; //on enleve un element 
                     
                 }else{
-                    currentSize--; //on enleve un element 
+                    currentSize--; //on enleve un element car le size ==1 donc on enleve l'element courant 
                 }     
             } 
            } 

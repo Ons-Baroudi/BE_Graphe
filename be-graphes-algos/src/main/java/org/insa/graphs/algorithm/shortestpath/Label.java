@@ -14,7 +14,7 @@ public class Label implements Comparable<Label> {
         this.coutmade=coutmade;
     }
 
-    public int getorigine()
+    public int getorigine() //sommet_courant 
     {
         return this.origine;
     }

@@ -42,7 +42,7 @@ public class Path {
             return new Path(graph, nodes.get(0));
         }
     
-        List<Arc> fastestArcs = new ArrayList<>();
+        List<Arc> fastestArcs = new ArrayList<>(); //on cree une liste de fastest Arcs
         Node current = nodes.get(0); // Initialise avec le premier noeud
     
         for (int i = 1; i < nodes.size(); i++) {
@@ -58,7 +58,7 @@ public class Path {
             }
     
             if (fastestArc == null) {
-                throw new IllegalArgumentException("No valid path exists between " + current + " and " + next);
+                throw new IllegalArgumentException("No valid path exists between " + current + " and " + next); //l'arc n'existe pas 
             }
     
             fastestArcs.add(fastestArc); // Ajouter l'arc le plus rapide à la liste
@@ -84,26 +84,27 @@ public class Path {
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes) {
         if (nodes.isEmpty()) {
             return new Path(graph);
-        } else if (nodes.size() == 1) {
+        } else if (nodes.size() == 1) {                     /*on cherche si le chemin est vide ou a que un seul noeud donc pas de problème tranquilo le chemin ne change pas*/
             return new Path(graph, nodes.get(0));
         }
-    
+    //SINON : on cree une liste de plus courts arcs 
         List<Arc> shortestArcs = new ArrayList<>();
-        Node current = nodes.get(0); // Commence avec le premier noeud de la liste
+        Node current = nodes.get(0); // Commence avec le premier noeud de la liste "comme étant notre premier pointeur de la liste qui va prendre le suivant à la fin"
     
-        for (int i = 1; i < nodes.size(); i++) {
+        for (int i = 1; i < nodes.size(); i++) { //on parcours tous les voisins
             Node next = nodes.get(i); // Prochain noeud de la liste
             Arc shortestArc = null;
-            double minLength = Double.MAX_VALUE;
-    
+            double minLength = Double.MAX_VALUE; //on donne la valeur maximale de la length (idem algo min )
+        
+
             for (Arc arc : current.getSuccessors()) { // Parcours tous les arcs sortants de 'current'
-                if (arc.getDestination().equals(next) && arc.getLength() < minLength) {
+                if (arc.getDestination().equals(next) && arc.getLength() < minLength) { 
                     shortestArc = arc; // Trouve l'arc le plus court vers 'next'
                     minLength = arc.getLength();
                 }
             }
     
-            if (shortestArc == null) {
+            if (shortestArc == null) {  
                 throw new IllegalArgumentException("No valid path from " + current + " to " + next);
             }
     
@@ -260,14 +261,14 @@ public class Path {
      */
     public boolean isValid() {
         // done
-        if (this.isEmpty()){ //pour tester si le chemin est vide 
+        if (this.isEmpty()){ //pour tester si le chemin est vide => valide 
             return true; 
         }
         else if(this.size()==1 || this.arcs.isEmpty()){
-            return true;
+            return true; //=> chemin valide 
         }
         else{
-            Node origine=this.getOrigin();
+            Node origine=this.getOrigin(); //on prend l'origine puis on parcours les arcs si on retourne à l'origine donc le chemin n'est plus valide 
             for(Arc arc : this.arcs){
                 if(!origine.equals(arc.getOrigin())){
                     return false;
