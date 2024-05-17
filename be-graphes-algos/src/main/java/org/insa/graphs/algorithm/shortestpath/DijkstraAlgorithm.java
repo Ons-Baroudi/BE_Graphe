@@ -92,8 +92,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
                                 try{heap.remove(successorLabel);
                                 }catch(ElementNotFoundException element){}
-                            System.out.println("le côut du label courant "+successorLabel.getRealCost());
-                            System.out.println("le côut du label courant "+successorLabel.getTotalCost());
+                            //System.out.println("le côut du label courant "+successorLabel.getRealCost());
+                            //System.out.println("le côut du label courant "+successorLabel.getTotalCost());
                             }
                             else
                             
@@ -154,10 +154,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                 }
                 currentNode=Node_marked;
             }
+            //le cas q'un chemin n'existe pas ou un seul arc existe 
+
 
             //si le size==0  le noeud d'origine est bien le seul chemin  
             if(path_arc.size()==0)
-            {
+            {   
                 return new ShortestPathSolution(data,Status.INFEASIBLE);
             }
             else
