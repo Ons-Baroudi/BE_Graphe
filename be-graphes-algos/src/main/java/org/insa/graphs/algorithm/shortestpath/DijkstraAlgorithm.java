@@ -3,7 +3,6 @@ package org.insa.graphs.algorithm.shortestpath;
 import java.util.ArrayList;
 import java.util.Collections;
 
-
 import org.insa.graphs.algorithm.AbstractSolution.Status;
 import org.insa.graphs.algorithm.utils.BinaryHeap;
 import org.insa.graphs.algorithm.utils.ElementNotFoundException;
@@ -11,167 +10,141 @@ import org.insa.graphs.model.Arc;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Node;
 import org.insa.graphs.model.Path;
-import java.util.HashMap;
-
 
 public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
+    // Graphe sur lequel l'algorithme sera exécuté
+    Graph graph;
 
-    Graph graph;/* graph sur lequel l'algorithme sera executé */
-    BinaryHeap<Label> heap; /* binary heap permettant le tri des labels dans l'ordre croissant des couts de label */
-                            //nous aide à trouver the shortest path 
-    HashMap<Integer, Label> LabelMap; /* hashmap permettant d'associer l'id du noeud a son label */
+    // Tas binaire pour trier les labels dans l'ordre croissant des coûts
+    BinaryHeap<Label> heap;
 
+    // Liste pour associer les IDs des nœuds à leurs labels
+    ArrayList<Label> labelList;
+
+    // Constructeur pour initialiser l'algorithme avec les données données
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
-        graph = data.getGraph();
-        heap = new BinaryHeap<Label>();
-        LabelMap = new HashMap<Integer, Label>(); 
+        graph=data.getGraph();
+        heap=new BinaryHeap<Label>();
+
+        // Initialiser la liste des labels avec des valeurs nulles
+        labelList=new ArrayList<>(Collections.nCopies(graph.size(), null));
     }
 
     @Override
     protected ShortestPathSolution doRun() {
-        final ShortestPathData data = getInputData();
+        final ShortestPathData data=getInputData();
 
-        /*initialisation en insérant l'origin dans la hashmap et dans le heap */
+        // Initialisation en insérant l'origine dans la liste et dans le tas
         int origin = data.getOrigin().getId();
-        Label labelOrigin = initLabel(origin,-1,false, 0);
-        LabelMap.put(origin, labelOrigin);   
-        heap.insert(labelOrigin);   
-        notifyOriginProcessed(graph.get(origin));  
+        Label labelOrigin=initLabel(origin, -1, false, 0);
+        labelList.set(origin, labelOrigin);
+        heap.insert(labelOrigin);
+        notifyOriginProcessed(graph.get(origin));
 
-        /* boucle permettant djikstra de s'éxecuter les deux conditions d'arrêt sont le tas est vide et tous les noeud sont marqués  */
-        while(heap.size()!=0)
-        {
-            /* on vérifie si le label destination est dans la hashmap pour par la suite vérifier si il est marquer, si il l'est on arrête l'algo */
-            if(LabelMap.containsKey(data.getDestination().getId()))
-            {
-                if(LabelMap.get(data.getDestination().getId()).getMarque())
-                {
-                    break;
-                }
+        // Boucle principale de l'algorithme de Dijkstra
+        // Continue jusqu'à ce que le tas soit vide ou que tous les nœuds soient marqués
+        while (heap.size() !=0) {
+            // Vérifie si le label de destination est marqué
+            int destinationId = data.getDestination().getId();
+            if (labelList.get(destinationId) !=null && labelList.get(destinationId).getMarque()) {
+                break; // Si le nœud de destination est marqué, arrêter l'algorithme
             }
-            
-            Label selectedNode = heap.findMin();/* séléction du sommet à marqué le cout min ou le premier du tas  */
-            System.out.println("le côut du label courant1 "+selectedNode.getRealCost());
-            System.out.println("le côut du label courant1 "+selectedNode .getTotalCost());
+
+            // Sélection du sommet à marquer (le coût minimal ou le premier du tas)
+            Label selectedNode=heap.findMin();
             heap.deleteMin();
             selectedNode.setMarque(true);
             notifyNodeMarked(graph.get(selectedNode.getorigine()));
 
-            /*on parcourt tout les arcs sortants du sommet que l'on vient de sélectionner */
-            for(Arc successor : graph.get(selectedNode.getorigine()).getSuccessors())
-            {
-                //on vérifie si l'arc est accssessible par voiture ou non ? 
-                if(data.isAllowed(successor))
-                {      
-                    Node succesorNode = successor.getDestination();
+            // Parcours de tous les arcs sortants du sommet sélectionné
+            for (Arc successor : graph.get(selectedNode.getorigine()).getSuccessors()) {
+                // Vérifie si l'arc est accessible
+                if (data.isAllowed(successor)) {
+                    Node successorNode = successor.getDestination();
                     Label successorLabel;
 
-                    /* on vérifie si le noeud de destination de l'arc est dans la hashmap, si oui on le récupère, si non on le créer et l'ajout dans la hashmap*/
-                    if(!LabelMap.containsKey(succesorNode.getId()))
-                    {
-                        successorLabel = initLabel(succesorNode.getId(),-1,false, Double.POSITIVE_INFINITY);
-                        LabelMap.put(succesorNode.getId(), successorLabel);
+                    // Vérifie si le nœud de destination est dans la liste, sinon on le crée
+                    if (labelList.get(successorNode.getId())==null) {
+                        successorLabel=initLabel(successorNode.getId(), -1, false, Double.POSITIVE_INFINITY);
+                        labelList.set(successorNode.getId(), successorLabel);
+                    } else {
+                        successorLabel=labelList.get(successorNode.getId());
                     }
-                    else
-                    {
-                        successorLabel=LabelMap.get(succesorNode.getId());
-                    }
-                
-                    /*si le noeud est déja marqué on passe on traite pas (spécifité de l'algorithme Dijkstra) */
-                    if(!successorLabel.getMarque())
-                    {/*on additionne le cout présent avec le cout du noeud séléctionné */
-                        double tempCost = data.getCost(successor)+selectedNode.getRealCost();
 
-                        /* on vérifie si il améliore ou non le cout actuel du noeud */
-                        if(tempCost<successorLabel.getRealCost())
-                        {
-                            if(successorLabel.getRealCost()!=Double.POSITIVE_INFINITY)
-                            {// on efface le sommet du tas 
+                    // Traitement du nœud si non marqué
+                    if (!successorLabel.getMarque()) {
+                        double tempCost=data.getCost(successor) + selectedNode.getRealCost();
 
-                                try{heap.remove(successorLabel);
-                                }catch(ElementNotFoundException element){}
-                            //System.out.println("le côut du label courant "+successorLabel.getRealCost());
-                            //System.out.println("le côut du label courant "+successorLabel.getTotalCost());
+                        // Mise à jour du coût et réinsertion dans le tas si amélioration
+                        if (tempCost<successorLabel.getRealCost()) {
+                            //on teste si le cout est /= à une valeur infinie
+                            if (successorLabel.getRealCost() != Double.POSITIVE_INFINITY) {
+                                try {
+                                    heap.remove(successorLabel);
+                                } catch (ElementNotFoundException element) {}
+                            } else {
+                                notifyNodeReached(successorNode);
                             }
-                            else
-                            
-                            {
-                                notifyNodeReached(succesorNode);
-                            }
-                            /* on met à jour avec le nouveau cout et nouveau père */
                             successorLabel.setCost(tempCost);
                             successorLabel.setPere(selectedNode.getorigine());
-
-                            
                             heap.insert(successorLabel);
                         }
                     }
                 }
             }
         }
-        notifyDestinationReached(data.getDestination());
-        return getPathFromSPA(graph, LabelMap, data);
-    }
-    public Label initLabel(int nodeId, int fatherNode, boolean marque, double coutRealise)
-    {
-        return new Label(nodeId, fatherNode, marque, coutRealise);
-    } 
 
-    /* fonction permettant de récupérer le path à partir du Map obtenu  */
-    public ShortestPathSolution getPathFromSPA(Graph graph,HashMap<Integer, Label> LabelMap, ShortestPathData data )
-    {
+        notifyDestinationReached(data.getDestination());
+        return getPathFromSPA(graph, labelList, data); 
+    }
+
+    // Méthode pour initialiser un label
+    public Label initLabel(int nodeId, int fatherNode, boolean marque, double coutRealise) {
+        return new Label(nodeId, fatherNode, marque, coutRealise);
+    }
+
+    // Fonction pour récupérer le chemin à partir de la liste des labels
+    public ShortestPathSolution getPathFromSPA(Graph graph, ArrayList<Label> labelList, ShortestPathData data) {
         ShortestPathSolution solution = null;
 
-        ArrayList<Arc> path_arc = new ArrayList<Arc>(); 
-        int currentNode=data.getDestination().getId();
+        ArrayList<Arc> path_arc = new ArrayList<Arc>();
+        int currentNode = data.getDestination().getId();
 
-        /* on teste si la destination est dans la Map, si se trouve pas donc le chemin est inaccessible */
-        if(!LabelMap.containsKey(currentNode))
-        {
-            return new ShortestPathSolution(data,Status.INFEASIBLE);
-        }
-        else
-        {
-            while(true)
-            {
-                Label currentLabel=LabelMap.get(currentNode);
-                int Node_marked = currentLabel.getPere();
-                if(Node_marked==-1)
-                {
+        // Teste si la destination est dans la liste, sinon le chemin est inaccessible
+        if (labelList.get(currentNode) == null) {
+            return new ShortestPathSolution(data, Status.INFEASIBLE);
+        } else {
+            while (true) {
+                Label currentLabel = labelList.get(currentNode);
+                int nodeMarked = currentLabel.getPere();
+                if (nodeMarked == -1) {
                     break;
                 }
-                Label dadLabel = LabelMap.get(Node_marked);
+                Label dadLabel = labelList.get(nodeMarked);
 
-                for(Arc arc : graph.get(Node_marked).getSuccessors())
-                {
-                    if(arc.getDestination().getId()==currentNode && arc.getOrigin().getId()==Node_marked && Math.abs(data.getCost(arc)-(currentLabel.getRealCost()-dadLabel.getRealCost())) <= 0.01)
-                    {
+                // Parcourt des arcs pour trouver le chemin
+                for (Arc arc : graph.get(nodeMarked).getSuccessors()) {
+                    if (arc.getDestination().getId() == currentNode && arc.getOrigin().getId() == nodeMarked
+                            && Math.abs(data.getCost(arc) - (currentLabel.getRealCost() - dadLabel.getRealCost())) <= 0.01) {
                         path_arc.add(arc);
                         break;
                     }
                 }
-                currentNode=Node_marked;
+                currentNode = nodeMarked;
             }
-            //le cas q'un chemin n'existe pas ou un seul arc existe 
 
-
-            //si le size==0  le noeud d'origine est bien le seul chemin  
-            if(path_arc.size()==0)
-            {   
-                return new ShortestPathSolution(data,Status.INFEASIBLE);
-            }
-            else
-            {
-               
-                Collections.reverse(path_arc); /* comme nous sommes parti de la destination, il faut inverser l'ordre dans lequel nous avons ajouter les arcs */
-                
-                Path path_final = new Path(graph,path_arc);/* création du path */
-                solution = new ShortestPathSolution(data,Status.OPTIMAL,path_final);
+            // Cas où un chemin n'existe pas ou un seul arc existe
+            if (path_arc.size() == 0) {
+                return new ShortestPathSolution(data, Status.INFEASIBLE);
+            } else {
+                Collections.reverse(path_arc); // Inversion de l'ordre des arcs
+                Path path_final = new Path(graph, path_arc); // Création du chemin
+                solution = new ShortestPathSolution(data, Status.OPTIMAL, path_final);
                 return solution;
             }
-
         }
     }
 }
+

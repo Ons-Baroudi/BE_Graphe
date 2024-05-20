@@ -11,7 +11,10 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.insa.graphs.algorithm.ArcInspectorFactory;
+import org.insa.graphs.algorithm.shortestpath.AStarAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.BellmanFordAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.DijkstraAlgorithm;
+import org.insa.graphs.algorithm.shortestpath.ShortestPathAlgorithm;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathData;
 import org.insa.graphs.algorithm.shortestpath.ShortestPathSolution;
 import org.insa.graphs.gui.drawing.Drawing;
@@ -70,13 +73,26 @@ public class Launch {
         ShortestPathData data = new ShortestPathData(graph, graph.get(1200), graph.get(1600),ArcInspectorFactory.getAllFilters().get(0));
         DijkstraAlgorithm algo =new DijkstraAlgorithm(data);
         ShortestPathSolution Dijkstra =algo.run();
+        //BellmanFordAlgorithm alog1 =new BellmanFordAlgorithm(data);
+        //ShortestPathSolution Bellmanford =alog1.run();
+        //AStarAlgorithm algo2 =new AStarAlgorithm(data);
+        //ShortestPathSolution Astar =algo2.run();
+
         // TODO: Create a PathReader.
         final PathReader pathReader = new BinaryPathReader(new DataInputStream(new BufferedInputStream(new FileInputStream(pathName))));
         // TODO: Read the path.
         final Path path = Dijkstra.getPath();
+        //final Path path1 =Bellmanford.getPath();
+        //final Path path2=Astar.getPath(); 
+
+        //System.out.println(path.getLength());
+        //System.out.println(path1.getLength());
+        //System.out.println(path2.getLength());
 
         // TODO: Draw the path.
         drawing.drawPath(path);
+        //drawing.drawPath(path1);
+        //drawing.drawPath(path2);
     }
 
 }
