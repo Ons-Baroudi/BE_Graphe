@@ -22,7 +22,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
     // Liste pour associer les IDs des nœuds à leurs labels
     ArrayList<Label> labelList;
 
-    // Constructeur pour initialiser l'algorithme avec les données données
     public DijkstraAlgorithm(ShortestPathData data) {
         super(data);
         graph=data.getGraph();
@@ -81,7 +80,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
                         if (tempCost<successorLabel.getRealCost()) {
                             //on teste si le cout est /= à une valeur infinie
                             if (successorLabel.getRealCost() != Double.POSITIVE_INFINITY) {
-                                try {
+                                try { //on a mis une exception si le successeur n'existe pas dans le tas 
                                     heap.remove(successorLabel);
                                 } catch (ElementNotFoundException element) {}
                             } else {
@@ -117,8 +116,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             return new ShortestPathSolution(data, Status.INFEASIBLE);
         } else {
             while (true) {
+                // on récupère le label actuel à partir de la liste des labels.
                 Label currentLabel = labelList.get(currentNode);
+
                 int nodeMarked = currentLabel.getPere();
+                //si le pere =-1 donc on a atteind l'origine on arrete 
                 if (nodeMarked == -1) {
                     break;
                 }
@@ -126,6 +128,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
                 // Parcourt des arcs pour trouver le chemin
                 for (Arc arc : graph.get(nodeMarked).getSuccessors()) {
+                    // Vérifie si l'arc actuel va du nœud père au nœud actuel et que son coût correspond
+                    // à la différence de coûts entre les labels des nœuds actuel et père.
                     if (arc.getDestination().getId() == currentNode && arc.getOrigin().getId() == nodeMarked
                             && Math.abs(data.getCost(arc) - (currentLabel.getRealCost() - dadLabel.getRealCost())) <= 0.01) {
                         path_arc.add(arc);
@@ -139,9 +143,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             if (path_arc.size() == 0) {
                 return new ShortestPathSolution(data, Status.INFEASIBLE);
             } else {
-                Collections.reverse(path_arc); // Inversion de l'ordre des arcs
-                Path path_final = new Path(graph, path_arc); // Création du chemin
-                solution = new ShortestPathSolution(data, Status.OPTIMAL, path_final);
+                //on inverse les sens des arcs 
+                Collections.reverse(path_arc); /*inversion de l'ordre des arcs à la fin de l'algorithme explication notre algo au tout début trouve les arcs dans le sens inverse 
+                par exemple l'algo va trouver [D -> C, C -> B, B -> A] mais notre chemin optimale est A -> B -> C -> D donc il faut inverser les arcs pour trouver le résultat */ 
+                Path path_final = new Path(graph, path_arc); // création du chemin
+                solution = new ShortestPathSolution(data, Status.OPTIMAL, path_final); //creation de notre solution optimale 
                 return solution;
             }
         }
