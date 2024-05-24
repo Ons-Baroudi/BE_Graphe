@@ -102,8 +102,7 @@ public abstract class TestAlgorithme {
         }
     }
 
-    @Test
-    public void testPathCourt() {
+    public void testcomparerBellman() {
         int origin, destination;
         do {
             origin = getRandomNodeId(graph);
@@ -122,14 +121,11 @@ public abstract class TestAlgorithme {
             assertEquals(path.getLength(), path_bellman.getLength(), 0.1);
         }
     }
-
-    @Test
+//teste d'optimalité
     public void testShortestPath() {
         int origin, destination;
-        do {
-            origin = getRandomNodeId(graph);
-            destination = getRandomNodeId(graph);
-        } while (origin == destination);
+        origin = getRandomNodeId(graph);
+        destination = getRandomNodeId(graph);
 
         ShortestPathData data = new ShortestPathData(graph, graph.get(origin), graph.get(destination), ArcInspectorFactory.getAllFilters().get(0));
         algo = createInstance(data);
@@ -137,17 +133,16 @@ public abstract class TestAlgorithme {
         Path path = shortestpath.getPath();
         if (path != null) {
             assertEquals(true, path.isValid());
-            ArrayList<Node> nodes = new ArrayList<Node>();
+            ArrayList<Node> nodes = new ArrayList<Node>(); //on récupère tous les noeuds de la solution
             nodes.add(path.getOrigin());
             for (Arc arc : path.getArcs()) {
                 nodes.add(arc.getDestination());
             }
-            Path path_path = Path.createShortestPathFromNodes(graph, nodes);
+            Path path_path = Path.createShortestPathFromNodes(graph, nodes); //on insere dans un nouveau path et on compare
             assertEquals(path_path.getLength(), path.getLength(), 0.1);
         }
     }
-
-    @Test
+//idem pour fastest path
     public void testFastestPath() {
         int origin, destination;
         do {
@@ -171,7 +166,6 @@ public abstract class TestAlgorithme {
         }
     }
 
-    @Test
     public void testShortestplusrapide() {
         int origin, destination;
         do {

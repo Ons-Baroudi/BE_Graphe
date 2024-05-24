@@ -2,13 +2,13 @@ package org.insa.graphs.algorithm.utils;
 
 import java.io.IOException;
 
+
 public class MainTest {
     
     // ANSI escape code constants for colors
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_RED = "\u001B[31m";
-
     public static void main(String[] args) {
         for (int i=0;i<100;i++){
         // on crée une instance de TestAlgoAstar
@@ -45,7 +45,7 @@ public class MainTest {
             System.out.println(ANSI_GREEN + "Test testIsValid passed." + ANSI_RESET);
 
             System.out.println("Executing testDjikstra.testPathCourt()");
-            testDjikstra.testPathCourt();
+            testDjikstra.testcomparerBellman();
             System.out.println(ANSI_GREEN + "Test testPathCourt passed." + ANSI_RESET);
 
             System.out.println("Executing testDjikstra.testShortestPath()");

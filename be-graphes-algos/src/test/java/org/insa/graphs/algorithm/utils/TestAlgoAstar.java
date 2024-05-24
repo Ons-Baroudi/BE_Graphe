@@ -12,7 +12,6 @@ import org.insa.graphs.algorithm.shortestpath.ShortestPathSolution;
 import org.insa.graphs.model.Graph;
 import org.insa.graphs.model.Path;
 import org.insa.graphs.model.Point;
-import org.junit.Test;
 import org.insa.graphs.model.io.BinaryGraphReader;
 import org.insa.graphs.model.io.GraphReader;
 import java.io.BufferedInputStream;
@@ -33,7 +32,6 @@ public class TestAlgoAstar extends TestAlgorithme {
         return (int) (Math.random() * graph.size());
     }
 
-    @Test
     public void testAstarComparedToDjikstra() {
         ShortestPathData data = new ShortestPathData(graph, graph.get(getRandomNodeId(graph)), graph.get(getRandomNodeId(graph)), ArcInspectorFactory.getAllFilters().get(0));
         algo = createInstance(data);
@@ -59,7 +57,6 @@ public class TestAlgoAstar extends TestAlgorithme {
         assertEquals(path.getLength(), path_djikstra.getLength(), 0.1);
     }
 
-    @Test
     public void testSolvingTime() throws IOException {
         final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/carre-dense.mapgr";
         @SuppressWarnings("resource")

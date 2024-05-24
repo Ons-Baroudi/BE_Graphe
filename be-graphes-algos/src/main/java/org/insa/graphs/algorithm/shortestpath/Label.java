@@ -8,7 +8,7 @@ public class Label implements Comparable<Label> {
 
     public Label(int origine, int pere, boolean marked, double coutmade)
     {
-        this.origine=origine;
+        this.origine=origine; //sommet actuel
         this.pere=pere;
         this.marked=marked;
         this.coutmade=coutmade;
