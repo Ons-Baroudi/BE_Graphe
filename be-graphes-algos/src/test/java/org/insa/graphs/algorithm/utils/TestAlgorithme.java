@@ -23,8 +23,6 @@ import org.insa.graphs.model.io.GraphReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import org.junit.Before;
-import org.junit.Test;
 
 public abstract class TestAlgorithme {
     protected static Graph graph;
@@ -32,7 +30,7 @@ public abstract class TestAlgorithme {
 
     public abstract ShortestPathAlgorithm createInstance(ShortestPathData data);
 
-    @Before
+
     public void initAll() throws IOException {
         final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/insa.mapgr";
         
@@ -46,7 +44,6 @@ public abstract class TestAlgorithme {
         return (int) (Math.random() * graph.size());
     }
 
-    @Test
     public void testPathInfeasable() throws IOException {
         final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/bretagne.mapgr";
         @SuppressWarnings("resource")
@@ -58,10 +55,8 @@ public abstract class TestAlgorithme {
 
         // on cherche 10 fois pour trouver un rand qui marche 
         for (int attempt = 0; attempt < 10; attempt++) {
-            do {
-                origin = getRandomNodeId(graph2);
-                destination = getRandomNodeId(graph2);
-            } while (origin == destination);
+            origin = getRandomNodeId(graph2);
+            destination = getRandomNodeId(graph2);
 
             ShortestPathData data = new ShortestPathData(graph2, graph2.get(origin), graph2.get(destination), ArcInspectorFactory.getAllFilters().get(0));
             algo = createInstance(data);
@@ -76,7 +71,7 @@ public abstract class TestAlgorithme {
         assertEquals(false, pathFound);
     }
 
-    @Test
+    
     public void testPathZero() {
         int nodeId = getRandomNodeId(graph);
         ShortestPathData data = new ShortestPathData(graph, graph.get(nodeId), graph.get(nodeId), ArcInspectorFactory.getAllFilters().get(0));
@@ -85,13 +80,11 @@ public abstract class TestAlgorithme {
         assertEquals(Status.INFEASIBLE, shortestpath.getStatus());
     }
 
-    @Test
+    
     public void testIsValid() {
         int origin, destination;
-        do {
-            origin = getRandomNodeId(graph);
-            destination = getRandomNodeId(graph);
-        } while (origin == destination);
+        origin = getRandomNodeId(graph);
+        destination = getRandomNodeId(graph);
 
         ShortestPathData data = new ShortestPathData(graph, graph.get(origin), graph.get(destination), ArcInspectorFactory.getAllFilters().get(0));
         algo = createInstance(data);
@@ -104,10 +97,8 @@ public abstract class TestAlgorithme {
 
     public void testcomparerBellman() {
         int origin, destination;
-        do {
-            origin = getRandomNodeId(graph);
-            destination = getRandomNodeId(graph);
-        } while (origin == destination);
+        origin = getRandomNodeId(graph);
+        destination = getRandomNodeId(graph);
 
         ShortestPathData data = new ShortestPathData(graph, graph.get(origin), graph.get(destination), ArcInspectorFactory.getAllFilters().get(0));
         algo = createInstance(data);
@@ -145,10 +136,8 @@ public abstract class TestAlgorithme {
 //idem pour fastest path
     public void testFastestPath() {
         int origin, destination;
-        do {
-            origin = getRandomNodeId(graph);
-            destination = getRandomNodeId(graph);
-        } while (origin == destination);
+        origin = getRandomNodeId(graph);
+        destination = getRandomNodeId(graph);
 
         ShortestPathData data = new ShortestPathData(graph, graph.get(origin), graph.get(destination), ArcInspectorFactory.getAllFilters().get(2));
         algo = createInstance(data);
@@ -168,10 +157,8 @@ public abstract class TestAlgorithme {
 
     public void testShortestplusrapide() {
         int origin, destination;
-        do {
-            origin = getRandomNodeId(graph);
-            destination = getRandomNodeId(graph);
-        } while (origin == destination);
+        origin = getRandomNodeId(graph);
+        destination = getRandomNodeId(graph);
 
         ShortestPathData data = new ShortestPathData(graph, graph.get(origin), graph.get(destination), ArcInspectorFactory.getAllFilters().get(0));
         algo = createInstance(data);

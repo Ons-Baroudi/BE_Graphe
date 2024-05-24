@@ -45,7 +45,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         // Boucle principale de l'algorithme de Dijkstra
         // Continue jusqu'à ce que le tas soit vide ou que tous les nœuds soient marqués
         while (heap.size() !=0) {
-            // Vérifie si le label de destination est marqué
+            // Vérifie si tous les noeuds sont marqués ou non si oui on stoppe 
             int destinationId = data.getDestination().getId();
             if (labelList.get(destinationId) !=null && labelList.get(destinationId).getMarque()) {
                 break; // Si le nœud de destination est marqué, arrêter l'algorithme
