@@ -55,9 +55,10 @@ public class Launch {
     public static void main(String[] args) throws Exception {
 
         // Visit these directory to see the list of available files on Commetud.
+
         //final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/carre-dense.mapgr";
         //final String pathName = "/home/hassouna/Bureau/3_eme_année_MIC/BE_Graphe/path_0x851_35299_7678.path";
-
+        
         final String mapName = "/mnt/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/belgium.mapgr";
         final String pathName = "/home/hassouna/Bureau/3_eme_année_MIC/BE_Graphe/path_be_297546_196709.path";
 

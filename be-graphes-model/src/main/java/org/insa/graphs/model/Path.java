@@ -56,7 +56,6 @@ public class Path {
                     minTravelTime = arc.getMinimumTravelTime();
                 }
             }
-    
             if (fastestArc == null) {
                 throw new IllegalArgumentException("No valid path exists between " + current + " and " + next); //l'arc n'existe pas 
             }
@@ -95,7 +94,6 @@ public class Path {
             Node next = nodes.get(i); // Prochain noeud de la liste
             Arc shortestArc = null;
             double minLength = Double.MAX_VALUE; //on donne la valeur maximale de la length (idem algo min )
-        
 
             for (Arc arc : current.getSuccessors()) { // Parcours tous les arcs sortants de 'current'
                 if (arc.getDestination().equals(next) && arc.getLength() < minLength) { 
