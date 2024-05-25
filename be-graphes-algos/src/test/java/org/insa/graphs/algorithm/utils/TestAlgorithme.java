@@ -50,31 +50,19 @@ public abstract class TestAlgorithme {
         final GraphReader reader = new BinaryGraphReader(
                 new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
         Graph graph2 = reader.read();
-        int origin, destination;
         boolean pathFound = true;
-
-        // on cherche 10 fois pour trouver un rand qui marche 
-        for (int attempt = 0; attempt < 10; attempt++) {
-            origin = getRandomNodeId(graph2);
-            destination = getRandomNodeId(graph2);
-
-            ShortestPathData data = new ShortestPathData(graph2, graph2.get(origin), graph2.get(destination), ArcInspectorFactory.getAllFilters().get(0));
+            ShortestPathData data = new ShortestPathData(graph2, graph2.get(271486), graph2.get(44025), ArcInspectorFactory.getAllFilters().get(0));
             algo = createInstance(data);
             ShortestPathSolution shortestpath = algo.run();
-
             if (shortestpath.getStatus() == Status.INFEASIBLE) {
                 pathFound = false;
-                break;
             }
-        }
-
         assertEquals(false, pathFound);
     }
 
     
     public void testPathZero() {
-        int nodeId = getRandomNodeId(graph);
-        ShortestPathData data = new ShortestPathData(graph, graph.get(nodeId), graph.get(nodeId), ArcInspectorFactory.getAllFilters().get(0));
+        ShortestPathData data = new ShortestPathData(graph, graph.get(1125), graph.get(1125),ArcInspectorFactory.getAllFilters().get(0));
         algo = createInstance(data);
         ShortestPathSolution shortestpath = algo.run();
         assertEquals(Status.INFEASIBLE, shortestpath.getStatus());

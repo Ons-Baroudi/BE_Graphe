@@ -10,7 +10,7 @@ public class Label implements Comparable<Label> {
     {
         this.origine=origine; //sommet actuel
         this.pere=pere;
-        this.marked=marked;
+        this.marked=marked;// 
         this.coutmade=coutmade;
     }
 

@@ -33,8 +33,8 @@ public class MainTest {
         try {
             testDjikstra.initAll(); // Initialiser le graphe pour TestAlgoDjikstra
             System.out.println("Executing testDjikstra.testPathInfeasible()");
-            //testDjikstra.testPathInfeasable();
-            //System.out.println(ANSI_GREEN + "Test testPathInfeasible passed." + ANSI_RESET);
+            testDjikstra.testPathInfeasable();
+            System.out.println(ANSI_GREEN + "Test testPathInfeasible passed." + ANSI_RESET);
 
             System.out.println("Executing testDjikstra.testPathZero()");
             testDjikstra.testPathZero();
